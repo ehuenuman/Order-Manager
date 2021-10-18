@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import NewWorkOrderForm from './WorkOrder/create';
+import WorkOrderForm from './WorkOrder/WorkOrderForm';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <NewWorkOrderForm />
+        <WorkOrderForm />
       </header>
     </div>
   );
