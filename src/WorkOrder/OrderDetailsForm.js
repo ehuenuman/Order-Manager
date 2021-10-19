@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AdapterDateDayjs from '@mui/lab/AdapterDayjs';
 import NumberFormat from "react-number-format";
 import { CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
-import { DatePicker, DesktopDatePicker, MobileDatePicker, LocalizationProvider } from '@mui/lab';
+import AdapterDateDayjs from '@mui/lab/AdapterDayjs';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
 
 
 const NumberFormatMoney = React.forwardRef(function NumberFormatMoney(props, ref) {
@@ -61,17 +62,10 @@ function OrderDetailsForm() {
           />
         </Grid>
         <Grid item xs="auto">
-          <LocalizationProvider dateAdapter={AdapterDateDayjs}>
-            <DatePicker
-              label="For mobile"
-              inputFormat="dd/MM/yyyy"
-              value={deadline}
-              onChange={(newValue) => {
-                setDeadline(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
+          <TextField
+            label="Deadline"
+            type="date"
+          />
         </Grid>
         <Grid item xs="auto">
           <FormControl>
