@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import NumberFormat from "react-number-format";
-import { CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, TextField, Typography } from '@mui/material';
-import AdapterDateDayjs from '@mui/lab/AdapterDayjs';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
-
+import { CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
+import TextField from './Components/FormUI/TextField';
 
 const NumberFormatMoney = React.forwardRef(function NumberFormatMoney(props, ref) {
   const { onChange, ...other } = props;
