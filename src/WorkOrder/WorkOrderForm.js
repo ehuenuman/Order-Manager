@@ -61,8 +61,9 @@ function WorkOrderForm() {
                             variant="contained"
                             onClick={handleNext}
                             sx={{ mt: 1, mr: 1 }}
+                            type={index === steps.length - 1 ? 'submit' : 'button'}
                           >
-                            {index === steps.length - 1 ? 'Finish' : 'Continue'}
+                            {index === steps.length - 1 ? 'Create Work Order' : 'Continue'}
                           </Button>
                           <Button
                             disabled={index === 0}
@@ -88,8 +89,6 @@ function WorkOrderForm() {
           </Button>
         </Paper>
       )}
-
-        <button type="submit">Submit</button>
       </form>
     </Container>
   );
