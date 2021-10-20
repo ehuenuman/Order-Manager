@@ -12,10 +12,11 @@ import {
   Stepper,
   Typography
 } from '@mui/material';
-import CustomerDetailsForm from './FormSection/CustomerDetailsForm';
-import OrderDetailsForm from './FormSection/OrderDetailsForm';
+import SubmitButton from './FormUI/SubmitButton';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import CustomerDetailsForm from './FormSection/CustomerDetailsForm';
+import OrderDetailsForm from './FormSection/OrderDetailsForm';
 
 const steps = [
   {
@@ -38,7 +39,7 @@ const INITIAL_FORM_STATE = {
   customerAddress: '',
   customerSuburb: '',
   customerCity: '',
-  cutomerPostalCode: '',
+  customerPostalCode: '',
   orderDetails: '',
   orderDeadline: '',
   orderAreaDesign: false,
@@ -126,14 +127,21 @@ function WorkOrderForm() {
                       <Grid container spacing={2} justifyContent="flex-end">
                         <Grid item xs="auto">
                           <div>
-                            <Button
-                              variant="contained"
-                              onClick={handleNext}
-                              sx={{ mt: 1, mr: 1 }}
-                              type={index === steps.length - 1 ? 'submit' : 'button'}
-                            >
-                              {index === steps.length - 1 ? 'Create Work Order' : 'Continue'}
-                            </Button>
+                            {activeStep === steps.length - 1 ? (
+                              <SubmitButton
+                                sx={{ mt: 1, mr: 1 }}
+                              >
+                                Create Work Order
+                              </SubmitButton>
+                            ) : (
+                              <Button
+                                variant="contained"
+                                onClick={handleNext}
+                                sx={{ mt: 1, mr: 1 }}
+                              >
+                                Continue
+                              </Button>
+                            )}
                             <Button
                               disabled={index === 0}
                               onClick={handleBack}
