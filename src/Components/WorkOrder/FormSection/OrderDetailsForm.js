@@ -1,20 +1,17 @@
 import React from 'react';
 import {
   CardContent,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
   FormLabel,
   Grid,
   InputAdornment,
   Stack,
   Typography
 } from '@mui/material';
-import PropTypes from 'prop-types';
 import NumberFormat from "react-number-format";
+import PropTypes from 'prop-types';
 import TextField from '../FormUI/TextField';
+import DateTimePicker from '../FormUI/DateTimePicker';
+import Checkbox from '../FormUI/Checkbox';
 
 const NumberFormatMoney = React.forwardRef((props, ref) => {
   const { onChange, ...other } = props;
@@ -68,25 +65,31 @@ function OrderDetailsForm() {
           />
         </Grid>
         <Grid item xs="auto">
-          <TextField
+          <DateTimePicker
             name="orderDeadline"
             label="Deadline"
-            type="date"
           />
         </Grid>
         <Grid item xs="auto">
-          <FormControl>
-            <FormLabel component="legend">
-              Work type
-            </FormLabel>
-            <FormGroup>
-              <FormControlLabel control={<Checkbox id="desing" value="design" />} label="Design" />
-              <FormControlLabel control={<Checkbox id="print" value="print" />} label="Print" />
-              <FormControlLabel control={<Checkbox id="production" value="production" />} label="Production" />
-              <FormControlLabel control={<Checkbox id="installation" value="installation" />} label="Installation" />
-            </FormGroup>
-            <FormHelperText>Select at least one.</FormHelperText>
-          </FormControl>
+          <Stack spacing={0}>
+            <Checkbox
+              name="orderAreaDesign"
+              legend="Type of Work"
+              label="Design"
+            />
+            <Checkbox
+              name="orderAreaPrint"
+              label="Print"
+            />
+            <Checkbox
+              name="orderAreaProduction"
+              label="Production"
+            />
+            <Checkbox
+              name="orderAreaInstallation"
+              label="Installation"
+            />
+          </Stack>
         </Grid>
         <Grid item xs="auto">
           <Stack spacing={2}>

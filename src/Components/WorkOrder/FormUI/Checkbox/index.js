@@ -1,14 +1,48 @@
 import React from 'react';
-import { Checkbox } from '@mui/material';
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormLabel
+} from '@mui/material';
+import { useField, useFormikContext } from 'formik';
 
-const CheckboxWrapper = () => {
+const CheckboxWrapper = ({
+  name,
+  label,
+  legend,
+  ...otherProps
+}) => {
+  const { setFieldValue } = useFormikContext();
+  const [field, meta] = useField(name);
+
+  const handleChange = event => {
+    const { checked } = event.target;
+    setFieldValue(name, checked);
+  }
 
   const configCheckbox = {
+    ...field,
+    ...otherProps,
+    onChange: handleChange,
+  }
 
+  const configFormControl = {};
+  if (meta && meta.touched && meta.error) {
+    configFormControl.error = true;
   }
 
   return (
-    <Checkbox />
+    <FormControl {...configFormControl}>
+      <FormLabel component="legend">{legend}</FormLabel>
+      <FormGroup>
+        <FormControlLabel
+          control={<Checkbox {...configCheckbox}/>}
+          label={label}
+        />
+      </FormGroup>
+    </FormControl>
   );
 };
 
