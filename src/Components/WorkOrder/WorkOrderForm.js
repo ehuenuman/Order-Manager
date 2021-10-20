@@ -12,8 +12,8 @@ import {
   Stepper,
   Typography
 } from '@mui/material';
-import CustomerDetailsForm from './CustomerDetailsForm';
-import OrderDetailsForm from './OrderDetailsForm';
+import CustomerDetailsForm from './FormSection/CustomerDetailsForm';
+import OrderDetailsForm from './FormSection/OrderDetailsForm';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -43,7 +43,6 @@ const INITIAL_FORM_STATE = {
   orderDeadline: '',
   orderTotalFee: '',
   orderPaidFee: '',
-  orderToPayFee: '',
 };
 
 const FORM_VALIDATION = Yup.object().shape({
@@ -68,10 +67,16 @@ const FORM_VALIDATION = Yup.object().shape({
     .required('Required'),
   customerCity: Yup.string()
     .required('Required'),
-  cutomerPostalCode: Yup.number()
+  customerPostalCode: Yup.number()
     .integer()
     .typeError('Please enter a valid postal code')
     .required('Required'),
+  orderDetails: Yup.string()
+    .required('Required'),
+  orderDeadline: '',
+  orderTotalFee: Yup.string()
+    .required('Required'),
+  orderPaidFee: Yup.string(),
 });
 
 function WorkOrderForm() {
