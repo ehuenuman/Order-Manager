@@ -48,6 +48,7 @@ const INITIAL_FORM_STATE = {
   orderAreaInstallation: false,
   orderTotalFee: '',
   orderPaidFee: '',
+  orderToPaidFee: '',
 };
 
 const FORM_VALIDATION = Yup.object().shape({
@@ -87,6 +88,7 @@ const FORM_VALIDATION = Yup.object().shape({
   orderTotalFee: Yup.string()
     .required('Required'),
   orderPaidFee: Yup.string(),
+  orderToPaidFee: Yup.string(),
 });
 
 function WorkOrderForm() {

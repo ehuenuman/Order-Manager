@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import TextField from '../FormUI/TextField';
 import DateTimePicker from '../FormUI/DateTimePicker';
 import Checkbox from '../FormUI/Checkbox';
+import { useFormikContext } from 'formik';
 
 const NumberFormatMoney = React.forwardRef((props, ref) => {
   const { onChange, ...other } = props;
@@ -40,13 +41,16 @@ NumberFormatMoney.propTypes = {
 };
 
 function OrderDetailsForm() {
-  const [fees, setFees] = React.useState({
-    orderTotalFee: "",
-    orderPaidFee: "",
-  });
+  const {
+    values: { orderTotalFee, orderPaidFee },
+    setFieldValue
+  } = useFormikContext();
 
   const handleChangeFee = (event) => {
-    setFees({ ...fees, [event.target.name]: event.target.value });
+    setFieldValue(event.target.name, event.target.value);
+    event.target.name === 'orderTotalFee' ?
+      setFieldValue('orderToPaidFee', event.target.value - orderPaidFee) :
+      setFieldValue('orderToPaidFee', orderTotalFee - event.target.value)
   };
 
   return (
@@ -93,13 +97,12 @@ function OrderDetailsForm() {
         </Grid>
         <Grid item xs="auto">
           <Stack spacing={2}>
-            <FormLabel>
+            <FormLabel component="legend">
               Services Fee
             </FormLabel>
             <TextField
               name="orderTotalFee"
               label="Total"
-              value={fees.orderTotalFee}
               onChange={handleChangeFee}
               InputProps={{
                 inputComponent: NumberFormatMoney,
@@ -110,7 +113,6 @@ function OrderDetailsForm() {
             <TextField
               name="orderPaidFee"
               label="Paid"
-              value={fees.orderPaidFee}
               onChange={handleChangeFee}
               InputProps={{
                 inputComponent: NumberFormatMoney,
@@ -119,9 +121,8 @@ function OrderDetailsForm() {
               }}
             />
             <TextField
-              name="orderPaidFee"
+              name="orderToPaidFee"
               label="To Pay"
-              value={fees.orderTotalFee - fees.orderPaidFee}
               helperText="Amount that must be paid to deliver the work"
               disabled
               InputProps={{
