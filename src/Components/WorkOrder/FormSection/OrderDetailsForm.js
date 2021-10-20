@@ -1,10 +1,22 @@
 import React from 'react';
+import {
+  CardContent,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  FormLabel,
+  Grid,
+  InputAdornment,
+  Stack,
+  Typography
+} from '@mui/material';
 import PropTypes from 'prop-types';
 import NumberFormat from "react-number-format";
-import { CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
-import TextField from './Components/FormUI/TextField';
+import TextField from '../FormUI/TextField';
 
-const NumberFormatMoney = React.forwardRef(function NumberFormatMoney(props, ref) {
+const NumberFormatMoney = React.forwardRef((props, ref) => {
   const { onChange, ...other } = props;
 
   return (
@@ -31,10 +43,9 @@ NumberFormatMoney.propTypes = {
 };
 
 function OrderDetailsForm() {
-  const [deadline, setDeadline] = React.useState(new Date('2014-08-18T21:11:54'));
   const [fees, setFees] = React.useState({
-    totalFee: "",
-    paidFee: "",
+    orderTotalFee: "",
+    orderPaidFee: "",
   });
 
   const handleChangeFee = (event) => {
@@ -49,17 +60,16 @@ function OrderDetailsForm() {
       <Grid container spacing={2} justifyContent="space-around">
         <Grid item xs={12}>
           <TextField
-            id="orderDescription"
+            name="orderDetails"
             label="Details"
             placeholder="Enter details about the new work"
             multiline
             rows={6}
-            required
-            fullWidth
           />
         </Grid>
         <Grid item xs="auto">
           <TextField
+            name="orderDeadline"
             label="Deadline"
             type="date"
           />
@@ -80,42 +90,43 @@ function OrderDetailsForm() {
         </Grid>
         <Grid item xs="auto">
           <Stack spacing={2}>
-            <FormControl>
-              <InputLabel htmlFor="totalPrice">Total</InputLabel>
-              <OutlinedInput
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                endAdornment={<InputAdornment position="end">Inc. GST</InputAdornment>}
-                name="totalFee"
-                label="Total"
-                value={fees.totalFee}
-                onChange={handleChangeFee}
-                inputComponent={NumberFormatMoney}
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel htmlFor="paid">Paid</InputLabel>
-              <OutlinedInput
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                endAdornment={<InputAdornment position="end">Inc. GST</InputAdornment>}
-                name="paidFee"
-                label="Paid"
-                value={fees.paidFee}
-                onChange={handleChangeFee}
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel htmlFor="totalPrice">To pay</InputLabel>
-              <OutlinedInput
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                endAdornment={<InputAdornment position="end">Inc. GST</InputAdornment>}
-                label="To pay"
-                value={fees.totalFee - fees.paidFee}
-                disabled
-              />
-              <FormHelperText>
-                Amount that must be paid to deliver the work.
-              </FormHelperText>
-            </FormControl>
+            <FormLabel>
+              Services Fee
+            </FormLabel>
+            <TextField
+              name="orderTotalFee"
+              label="Total"
+              value={fees.orderTotalFee}
+              onChange={handleChangeFee}
+              InputProps={{
+                inputComponent: NumberFormatMoney,
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                endAdornment: <InputAdornment position="end">Inc. GST</InputAdornment>,
+              }}
+            />
+            <TextField
+              name="orderPaidFee"
+              label="Paid"
+              value={fees.orderPaidFee}
+              onChange={handleChangeFee}
+              InputProps={{
+                inputComponent: NumberFormatMoney,
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                endAdornment: <InputAdornment position="end">Inc. GST</InputAdornment>,
+              }}
+            />
+            <TextField
+              name="orderPaidFee"
+              label="To Pay"
+              value={fees.orderTotalFee - fees.orderPaidFee}
+              helperText="Amount that must be paid to deliver the work"
+              disabled
+              InputProps={{
+                inputComponent: NumberFormatMoney,
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                endAdornment: <InputAdornment position="end">Inc. GST</InputAdornment>,
+              }}
+            />
           </Stack>
         </Grid>
 
