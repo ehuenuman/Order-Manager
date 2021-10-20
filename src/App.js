@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import WorkOrderForm from './WorkOrder/WorkOrderForm';
+import WorkOrderForm from './Components/WorkOrder/WorkOrderForm';
 
 function App() {
   return (
