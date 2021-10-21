@@ -10,7 +10,7 @@ import {
 import NumberFormat from "react-number-format";
 import PropTypes from 'prop-types';
 import TextField from '../FormUI/TextField';
-import DateTimePicker from '../FormUI/DateTimePicker';
+import DatePicker from '../FormUI/DatePicker';
 import CheckboxGroup from '../FormUI/CheckboxGroup';
 import { useFormikContext } from 'formik';
 
@@ -76,7 +76,7 @@ function OrderDetailsForm() {
           />
         </Grid>
         <Grid item xs="auto">
-          <DateTimePicker
+          <DatePicker
             name="orderDeadline"
             label="Deadline"
           />
