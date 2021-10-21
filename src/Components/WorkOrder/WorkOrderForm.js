@@ -42,10 +42,7 @@ const INITIAL_FORM_STATE = {
   customerPostalCode: '',
   orderDetails: '',
   orderDeadline: '',
-  orderAreaDesign: false,
-  orderAreaPrint: false,
-  orderAreaProduction: false,
-  orderAreaInstallation: false,
+  orderArea: [],
   orderTotalFee: '',
   orderPaidFee: '',
   orderToPaidFee: '',
@@ -81,10 +78,8 @@ const FORM_VALIDATION = Yup.object().shape({
     .required('Required'),
   orderDeadline: Yup.date()
     .required('Required'),
-  orderAreaDesign: Yup.boolean(),
-  orderAreaPrint: Yup.boolean(),
-  orderAreaProduction: Yup.boolean(),
-  orderAreaInstallation: Yup.boolean(),
+  orderArea: Yup.array()
+    .min(1, 'At least one option must be selected'),
   orderTotalFee: Yup.string()
     .required('Required'),
   orderPaidFee: Yup.string(),

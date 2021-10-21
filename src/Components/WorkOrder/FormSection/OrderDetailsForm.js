@@ -11,7 +11,7 @@ import NumberFormat from "react-number-format";
 import PropTypes from 'prop-types';
 import TextField from '../FormUI/TextField';
 import DateTimePicker from '../FormUI/DateTimePicker';
-import Checkbox from '../FormUI/Checkbox';
+import CheckboxGroup from '../FormUI/CheckboxGroup';
 import { useFormikContext } from 'formik';
 
 const NumberFormatMoney = React.forwardRef((props, ref) => {
@@ -41,6 +41,13 @@ NumberFormatMoney.propTypes = {
 };
 
 function OrderDetailsForm() {
+  const checkboxItems = [
+    { name: 'orderAreaDesign', label: 'Design' },
+    { name: 'orderAreaPrint', label: 'Print' },
+    { name: 'orderAreaProduction', label: 'Production' },
+    { name: 'orderAraInstallation', label: 'Installation' }
+  ];
+
   const {
     values: { orderTotalFee, orderPaidFee },
     setFieldValue
@@ -75,25 +82,11 @@ function OrderDetailsForm() {
           />
         </Grid>
         <Grid item xs="auto">
-          <Stack spacing={0}>
-            <Checkbox
-              name="orderAreaDesign"
-              legend="Type of Work"
-              label="Design"
-            />
-            <Checkbox
-              name="orderAreaPrint"
-              label="Print"
-            />
-            <Checkbox
-              name="orderAreaProduction"
-              label="Production"
-            />
-            <Checkbox
-              name="orderAreaInstallation"
-              label="Installation"
-            />
-          </Stack>
+          <CheckboxGroup
+            name="orderArea"
+            legend="Type of work"
+            checkboxItems={checkboxItems}
+          />
         </Grid>
         <Grid item xs="auto">
           <Stack spacing={2}>
