@@ -5,12 +5,10 @@ import {
   CardActions,
   Container,
   Grid,
-  Paper,
   Step,
   StepContent,
   StepLabel,
   Stepper,
-  Typography
 } from '@mui/material';
 import SubmitButton from './FormUI/SubmitButton';
 import { Form, Formik } from 'formik';
@@ -18,18 +16,7 @@ import * as Yup from 'yup';
 import CustomerDetailsForm from './FormSection/CustomerDetailsForm';
 import OrderDetailsForm from './FormSection/OrderDetailsForm';
 
-const steps = [
-  {
-    label: 'Customer details',
-    content: <CustomerDetailsForm />,
-  },
-  {
-    label: 'Order details',
-    content: <OrderDetailsForm />
-  }
-];
-
-const INITIAL_FORM_STATE = {
+const initialFormState = {
   customerName: '',
   customerIdDocument: '',
   contactName: '',
@@ -48,7 +35,7 @@ const INITIAL_FORM_STATE = {
   orderToPaidFee: '',
 };
 
-const FORM_VALIDATION = Yup.object().shape({
+const formSchemaValidation = Yup.object().shape({
   customerName: Yup.string()
     .required('Required'),
   customerIdDocument: Yup.string()
@@ -77,6 +64,8 @@ const FORM_VALIDATION = Yup.object().shape({
   orderDetails: Yup.string()
     .required('Required'),
   orderDeadline: Yup.date()
+    .min(new Date(), 'This date has passed')
+    .typeError('Invalid date')
     .required('Required'),
   orderArea: Yup.array()
     .min(1, 'At least one option must be selected'),
@@ -85,6 +74,17 @@ const FORM_VALIDATION = Yup.object().shape({
   orderPaidFee: Yup.string(),
   orderToPaidFee: Yup.string(),
 });
+
+const steps = [
+  {
+    label: 'Customer details',
+    content: <CustomerDetailsForm />,
+  },
+  {
+    label: 'Order details',
+    content: <OrderDetailsForm />
+  }
+];
 
 function WorkOrderForm() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -97,15 +97,11 @@ function WorkOrderForm() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
     <Container>
       <Formik
-        initialValues={{ ...INITIAL_FORM_STATE }}
-        validationSchema={FORM_VALIDATION}
+        initialValues={{ ...initialFormState }}
+        validationSchema={formSchemaValidation}
         onSubmit={values => {
           console.log(values);
         }}
@@ -155,14 +151,6 @@ function WorkOrderForm() {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length && (
-            <Paper square elevation={0} sx={{ p: 3 }}>
-              <Typography>All steps completed - you&apos;re finished</Typography>
-              <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                Reset
-              </Button>
-            </Paper>
-          )}
         </Form>
       </Formik>
     </Container>
