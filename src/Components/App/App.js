@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import NavDrawer from '../NavDrawer';
 import WorkOrderForm from '../WorkOrder/WorkOrderForm';
+import WorkOrder from '../WorkOrder/WorkOrder';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
               <Typography>
                 Dashboard
               </Typography>
+            </Route>
+            <Route exact path="/order">
+              <WorkOrder />
             </Route>
             <Route exact path="/new-work">
               <WorkOrderForm />
