@@ -44,7 +44,7 @@ function OrderDetailsForm() {
   const checkboxItems = [
     { name: 'orderAreaDesign', label: 'Design' },
     { name: 'orderAreaPrint', label: 'Print' },
-    { name: 'orderAreaProduction', label: 'Production' },
+    { name: 'orderAreaWorkshop', label: 'Workshop' },
     { name: 'orderAraInstallation', label: 'Installation' }
   ];
 
