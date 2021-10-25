@@ -8,8 +8,8 @@ import {
   Route
 } from 'react-router-dom';
 import NavDrawer from './Components/NavDrawer';
-import WorkOrderForm from './Components/WorkOrder/WorkOrderForm';
-import WorkOrder from './Components/WorkOrder/WorkOrder';
+import WorkOrderForm from './Components/WorkOrderForm';
+import WorkOrder from './Components/WorkOrder';
 
 function App() {
   return (
