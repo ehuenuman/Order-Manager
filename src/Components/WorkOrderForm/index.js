@@ -10,11 +10,11 @@ import {
   StepLabel,
   Stepper,
 } from '@mui/material';
-import SubmitButton from './FormUI/SubmitButton';
+import SubmitButton from './Components/FormUI/SubmitButton';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import CustomerDetailsForm from './FormSection/CustomerDetailsForm';
-import OrderDetailsForm from './FormSection/OrderDetailsForm';
+import CustomerDetailsForm from './Components/CustomerDetailsForm';
+import OrderDetailsForm from './Components/OrderDetailsForm';
 
 const initialFormState = {
   customerName: '',

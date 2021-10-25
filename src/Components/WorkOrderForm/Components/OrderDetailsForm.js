@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import NumberFormat from "react-number-format";
 import PropTypes from 'prop-types';
-import TextField from '../FormUI/TextField';
-import DatePicker from '../FormUI/DatePicker';
-import CheckboxGroup from '../FormUI/CheckboxGroup';
+import TextField from './FormUI/TextField';
+import DatePicker from './FormUI/DatePicker';
+import CheckboxGroup from './FormUI/CheckboxGroup';
 import { useFormikContext } from 'formik';
 
 const NumberFormatMoney = React.forwardRef((props, ref) => {

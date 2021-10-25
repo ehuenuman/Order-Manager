@@ -1,6 +1,6 @@
 import React from 'react';
 import { CardContent, Grid, Typography } from '@mui/material';
-import TextField from '../FormUI/TextField';
+import TextField from './FormUI/TextField';
 
 function CustomerDetailsForm() {
   return (
