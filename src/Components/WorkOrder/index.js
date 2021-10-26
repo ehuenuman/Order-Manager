@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router';
 
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -14,7 +15,14 @@ import OrderStatus from './Components/OrderStatus';
 import OrderDetails from './Components/OrderDetails';
 import OrderCustomerDetails from './Components/OrderCustomerDetails';
 
+import OrdersData from '../../Data/ordersData.json';
+
+
+const order = OrdersData[90];
+
 function WorkOrder() {
+  let { orderNumber } = useParams();
+
   return (
     <Container>
       <Grid
@@ -28,7 +36,7 @@ function WorkOrder() {
           alignItems="center"
         >
           <Typography variant="h5" component="div">
-            Order #12345
+            Order #{orderNumber}
           </Typography>
           <ButtonGroup variant='contained'>
             <Button>
@@ -41,7 +49,12 @@ function WorkOrder() {
         </Grid>
         <Grid item xs={12} md={8}>
           <DashboardCard title="Order details">
-            <OrderDetails />
+            <OrderDetails 
+              creationDate={order.creationDate}
+              deadline={order.deadline}
+              description={order.description}
+              fee={order.fee}
+            />
           </DashboardCard>
         </Grid>
         <Grid item xs={12} md={4}>
@@ -51,7 +64,11 @@ function WorkOrder() {
         </Grid>
         <Grid item xs>
           <DashboardCard title="Order status">
-            <OrderStatus />
+            <OrderStatus 
+              areas={order.areas}
+              stages={order.stages}
+              status={order.status}
+            />
           </DashboardCard>
         </Grid>
       </Grid>

@@ -22,7 +22,7 @@ function App() {
             <Route exact path="/order">
               <WorkOrderDashboard />
             </Route>
-            <Route exact path={'/order/:ordernumber'}>
+            <Route exact path={'/order/:orderNumber'}>
               <WorkOrder />
             </Route>
             <Route exact path="/new-work">
