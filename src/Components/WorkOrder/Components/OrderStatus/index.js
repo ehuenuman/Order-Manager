@@ -1,8 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { format } from 'date-fns';
 
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
@@ -10,14 +13,43 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
+
 import { ColorlibConnector, ColorlibStepIcon } from './Components/StepperUI';
 
-const steps = ['Design', 'Print', 'Workshop', 'Installation', 'Delivery'];
+const formatDate = "dd MMM, yyyy";
 
-const OrderStatus = () => {
+//var steps = ["Design", "Print", "Workshop", "Installation", "Delivery"];
+
+const parseText = {
+  'design': 'Design',
+  'print': 'Print',
+  'workshop': 'Workshop',
+  'installion': 'Installation',
+  'delivery': 'Delivery',
+  'isWaiting': 'Waiting',
+  'isOnGoing': 'In progress',
+  'isReady': 'Ready to pick up or delivery',
+  'isDelivered': 'Delivered'
+}
+
+const OrderStatus = ({
+  areas,
+  stages,
+  status
+}) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [inProgress, setInProgress] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
+
+  const steps = [];
+  Object.entries(areas).map(area => {
+    if (area[1]) steps.push(area[0]);
+  });
+  steps.push("delivery");
+
 
   const totalSteps = () => {
     return steps.length;
@@ -57,10 +89,78 @@ const OrderStatus = () => {
 
   return (
     <Stack
-      spacing={2}
-      marginTop={5}
+      spacing={5}
+      marginTop={2}
       width="100%"
     >
+      <Grid
+        container
+        spacing={2}
+        justifyContent="space-evenly"
+        alignItems="center"
+      >
+        <Grid
+          container
+          item
+          xs="auto"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Grid item xs="auto">
+            <TimelineOutlinedIcon />
+          </Grid>
+          <Grid item xs>
+            <Typography variant="subtitle2" component="span" marginLeft={1}>
+              Status
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" component="div">
+              {parseText[status.stage] + " " + parseText[status.area]}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          item
+          xs="auto"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Grid item xs="auto">
+            <AccessTimeOutlinedIcon />
+          </Grid>
+          <Grid item xs>
+            <Typography variant="subtitle2" component="span" marginLeft={1}>
+              Last update
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" component="div">
+              {format(new Date(status.lastUpdate), formatDate)}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          item
+          xs="auto"
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Grid item xs="auto">
+            <TimerOutlinedIcon
+              color={status.onTime ? "success" : "error"}
+              fontSize="large"
+            />
+          </Grid>
+          <Grid item xs>
+            <Typography variant="body1" component="div" marginLeft={1}>
+              {status.onTime ? "On time" : "Late"}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
       <Stepper
         nonLinear
         activeStep={activeStep}
@@ -80,26 +180,12 @@ const OrderStatus = () => {
                 StepIconComponent={ColorlibStepIcon}
                 StepIconProps={{ 'icon': label, 'inProgress': index === inProgress }}
               >
-                {label}
+                {parseText[label]}
               </StepLabel>
             </StepButton>
           </Step>
         ))}
       </Stepper>
-      <Grid
-        container
-        spacing={2}
-      >
-        <Grid container item xs>
-          <Typography variant="body1" component="div">
-            Status
-          </Typography>
-          <Divider orientation="vertical" variant="middle" />
-          <Typography variant="body1" component="div">
-            Waiting for design
-          </Typography>
-        </Grid>
-      </Grid>
       <Grid
         container
         justifyContent="space-between"
@@ -137,6 +223,12 @@ const OrderStatus = () => {
       </Grid>
     </Stack>
   )
+}
+
+OrderStatus.propTypes = {
+  areas: PropTypes.object.isRequired,
+  stages: PropTypes.object.isRequired,
+  status: PropTypes.object.isRequired
 }
 
 export default OrderStatus

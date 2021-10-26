@@ -1,39 +1,55 @@
 import React from 'react'
+import PropTypes from 'prop-types';
+import { format, formatDistance } from 'date-fns';
+
 import Collapse from '@mui/material/Collapse';
-import Divider from '@mui/material/Divider'; 
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List'; 
-import ListItem from '@mui/material/ListItem'; 
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import Typography from '@mui/material/Typography';
-import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
+import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 
+const formatDate = "dd MMM, yyyy";
+const formatCurrency = (number) => (
+  new Intl.NumberFormat('en-En', {
+    style: 'currency', 
+    currency: 'NZD',
+    maximumSignificantDigits: 2
+  }).format(number)
+);
 
-const OrderDetails = () => {
+const OrderDetails = ({
+  creationDate,
+  deadline,
+  description,
+  fee
+}) => {
   const [showFeeDetails, setShowFeeDetails] = React.useState(false);
 
   const handleShowFeeDeatils = () => {
     setShowFeeDetails(!showFeeDetails);
   }
-  
+
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} mt={1}>
       <Grid item xs={12}>
-        <Typography variant="h6" component="div">
-          Description
-        </Typography>
         <Typography variant="body1" component="div">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora commodi architecto, fugit perferendis inventore ipsam aspernatur voluptatibus! Eaque impedit eum consequuntur totam? Alias beatae ex animi accusantium quod sed ipsum!
+          {description}
         </Typography>
       </Grid>
       <Grid
         container
+        item
         spacing={2}
         justifyContent="space-evenly"
       >
@@ -41,17 +57,26 @@ const OrderDetails = () => {
           <List
             subheader={
               <ListSubheader component="div">
-                Deadline
+                Timeframe
               </ListSubheader>
             }
           >
             <ListItem>
               <ListItemIcon>
-                <CalendarTodayOutlinedIcon />
+                <TodayOutlinedIcon aria-label="created date" />
               </ListItemIcon>
               <ListItemText
-                primary="October 30th, 20201"
-                secondary="6 days to deadline"
+                primary={format(new Date(creationDate), formatDate)}
+                secondary={formatDistance(new Date(creationDate), new Date(), { addSuffix: true })}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <EventOutlinedIcon aria-label="deadline" />
+              </ListItemIcon>
+              <ListItemText
+                primary={format(new Date(deadline), formatDate)}
+                secondary={formatDistance(new Date(deadline), new Date(), { addSuffix: true })}
               />
             </ListItem>
           </List>
@@ -70,7 +95,7 @@ const OrderDetails = () => {
                 <MonetizationOnOutlinedIcon />
               </ListItemIcon>
               <ListItemText
-                primary="190 NZD"
+                primary={formatCurrency(fee.total)}
                 secondary="Inc. GST."
               />
               <IconButton onClick={handleShowFeeDeatils}>
@@ -78,17 +103,17 @@ const OrderDetails = () => {
               </IconButton>
             </ListItem>
             <Collapse in={showFeeDetails} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
+              <List component="div" disablePadding dense>
                 <ListItem sx={{ pl: 4 }}>
                   <ListItemText
                     primary="Paid"
-                    secondary="$ 100 NZD Inc. GST."
+                    secondary={formatCurrency(fee.paid) + " Inc. GST."}
                   />
                 </ListItem>
                 <ListItem sx={{ pl: 4 }}>
                   <ListItemText
                     primary="To paid"
-                    secondary="$ 90 NZD Inc. GST."
+                    secondary={formatCurrency(fee.toPaid) + " Inc. GST."}
                   />
                 </ListItem>
               </List>
@@ -98,6 +123,13 @@ const OrderDetails = () => {
       </Grid>
     </Grid>
   )
+}
+
+OrderDetails.propTypes = {
+  creationDate: PropTypes.string.isRequired,
+  deadline: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  fee: PropTypes.object.isRequired
 }
 
 export default OrderDetails

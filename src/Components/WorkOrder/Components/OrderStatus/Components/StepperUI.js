@@ -61,11 +61,11 @@ function ColorlibStepIcon(props) {
   const { active, completed, inProgress, className } = props;
 
   const icons = {
-    "Design": <DesignServicesOutlinedIcon />,
-    "Print": <LocalPrintshopOutlinedIcon />,
-    "Workshop": <HandymanOutlinedIcon />,
-    "Installation": <PanToolOutlinedIcon />,
-    "Delivery": <DeliveryDiningOutlinedIcon />
+    "design": <DesignServicesOutlinedIcon />,
+    "print": <LocalPrintshopOutlinedIcon />,
+    "workshop": <HandymanOutlinedIcon />,
+    "installation": <PanToolOutlinedIcon />,
+    "delivery": <DeliveryDiningOutlinedIcon />
   };
 
   return (
