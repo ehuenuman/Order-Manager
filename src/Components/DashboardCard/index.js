@@ -16,24 +16,26 @@ const DashboardCard = ({
       sx={{
         position: 'relative',
         overflow: 'initial',
-        mt: 3,
-        pt: 4
+        mt: (title) && 3,
+        pt: (title) && 4
       }}
     >
-      <CardHeader
-        title={title}
-        sx={{
-          position: 'absolute',
-          mt: -7,
-          ml: 2,
-          width: '80%',
-          alignSelf: 'center',
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          boxShadow: 3,
-          borderRadius: 3,
-        }}
-      />
+      {
+        title && <CardHeader
+          title={title}
+          sx={{
+            position: 'absolute',
+            mt: -7,
+            ml: 2,
+            width: '80%',
+            alignSelf: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            boxShadow: 3,
+            borderRadius: 3,
+          }}
+        />
+      }
       <CardContent>
         {children}
       </CardContent>
@@ -42,7 +44,7 @@ const DashboardCard = ({
 }
 
 DashboardCard.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   children: PropTypes.element.isRequired
 }
 
