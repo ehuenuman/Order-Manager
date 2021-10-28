@@ -23,16 +23,37 @@ const formatDate = "dd MMM, yyyy";
 
 //var steps = ["Design", "Print", "Workshop", "Installation", "Delivery"];
 
-const parseText = {
-  'design': 'Design',
-  'print': 'Print',
-  'workshop': 'Workshop',
-  'installion': 'Installation',
-  'delivery': 'Delivery',
-  'isWaiting': 'Waiting',
-  'isOnGoing': 'In progress',
-  'isReady': 'Ready to pick up or delivery',
-  'isDelivered': 'Delivered'
+const parsePhrase = (word1, word2) => {
+  var phrase;
+  if (word2) {
+    switch (word2) {
+      case 'isWaiting':
+        (word1 === 'installation') ? (phrase = "Work order expecting installation")
+          : (phrase = "Work order waiting in the " + word1 + " area");
+        break;
+      case 'isOnGoing':
+        phrase = "Work order in the " + word1 + " process";
+        break;
+      case 'isReady':
+        phrase = "Work order completed and ready to pick up";
+        break;
+      case 'isDelivered':
+        phrase = "Work order delivered to the customer";
+        break;
+      default:
+        break;
+    }
+  } else {
+    var withCap = {
+      'design': 'Design',
+      'print': 'Print',
+      'workshop': 'Workshop',
+      'installion': 'Installation',
+      'delivery': 'Delivery'
+    }
+    phrase = withCap[word1]
+  }
+  return phrase;
 }
 
 const OrderStatus = ({
@@ -40,16 +61,27 @@ const OrderStatus = ({
   stages,
   status
 }) => {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [inProgress, setInProgress] = React.useState(0);
-  const [completed, setCompleted] = React.useState({});
-
   const steps = [];
   Object.entries(areas).map(area => {
     if (area[1]) steps.push(area[0]);
   });
   steps.push("delivery");
 
+  const [activeStep, setActiveStep] = React.useState(
+    steps.findIndex((element) => element === status.area)
+  );
+  const [inProgress, setInProgress] = React.useState(
+    (status.stage === 'isDelivered') ? activeStep + 1 : activeStep
+  );
+  const [completed, setCompleted] = React.useState(
+    () => {
+      var completedList = {};
+      for (let index = 0; index < inProgress; index++) {
+        completedList[index] = true;
+      }
+      return completedList
+    }
+  );
 
   const totalSteps = () => {
     return steps.length;
@@ -116,7 +148,7 @@ const OrderStatus = ({
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" component="div">
-              {parseText[status.stage] + " " + parseText[status.area]}
+              {parsePhrase(status.area, status.stage)}
             </Typography>
           </Grid>
         </Grid>
@@ -180,7 +212,8 @@ const OrderStatus = ({
                 StepIconComponent={ColorlibStepIcon}
                 StepIconProps={{ 'icon': label, 'inProgress': index === inProgress }}
               >
-                {parseText[label]}
+                {parsePhrase(label)}
+                {parsePhrase()}
               </StepLabel>
             </StepButton>
           </Step>
@@ -200,7 +233,9 @@ const OrderStatus = ({
         {activeStep !== steps.length &&
           (completed[activeStep] ? (
             <Typography variant="caption" sx={{ display: 'inline-block' }}>
-              Step {activeStep + 1} already completed
+              {
+                parsePhrase(steps[activeStep]) + " completed on " + format(new Date(stages[steps[activeStep]].isFinish), formatDate)
+              }
             </Typography>
           ) : (
             <Button onClick={handleComplete}>
