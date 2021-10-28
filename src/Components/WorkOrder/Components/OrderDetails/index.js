@@ -23,8 +23,7 @@ const formatDate = "dd MMM, yyyy";
 const formatCurrency = (number) => (
   new Intl.NumberFormat('en-En', {
     style: 'currency', 
-    currency: 'NZD',
-    maximumSignificantDigits: 2
+    currency: 'USD'
   }).format(number)
 );
 
