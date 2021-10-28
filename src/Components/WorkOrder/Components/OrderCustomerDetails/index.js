@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -10,7 +11,10 @@ import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
-const OrderCustomerDetails = () => {
+const OrderCustomerDetails = ({
+  businessName,
+  contact
+}) => {
   return (
     <List>
       <ListItem>
@@ -18,7 +22,7 @@ const OrderCustomerDetails = () => {
           <BusinessOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary="Business Name"
+          primary={businessName}
         />
       </ListItem>
       <ListItem>
@@ -26,7 +30,7 @@ const OrderCustomerDetails = () => {
           <PersonOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary="Customer Contact Name"
+          primary={contact.name +" "+ contact.surname}
         />
       </ListItem>
       <ListItem>
@@ -34,7 +38,7 @@ const OrderCustomerDetails = () => {
           <LocalPhoneOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary="Customer Contact Number"
+          primary={contact.phone}
         />
       </ListItem>
       <ListItem>
@@ -42,11 +46,16 @@ const OrderCustomerDetails = () => {
           <AlternateEmailOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary="Customer Contact Email"
+          primary={contact.email}
         />
       </ListItem>
     </List>
   )
+}
+
+OrderCustomerDetails.propTypes = {
+  businessName: PropTypes.string.isRequired,
+  contact: PropTypes.object.isRequired
 }
 
 export default OrderCustomerDetails
