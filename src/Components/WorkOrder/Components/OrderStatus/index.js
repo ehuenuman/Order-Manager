@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
