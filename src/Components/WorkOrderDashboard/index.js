@@ -6,10 +6,10 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { DataGrid } from '@mui/x-data-grid';
 
-import StatusCell from './Components/StatusCell';
+import StatusCell from './components/StatusCell';
 import DashboardCard from '../DashboardCard';
 
-import OrdersData from '../../Data/ordersData.json';
+import OrdersData from '../../data/ordersData.json';
 
 const columns = [
   {

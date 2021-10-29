@@ -9,12 +9,12 @@ import Typography from '@mui/material/Typography';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 
 import DashboardCard from '../DashboardCard';
-import OrderStatus from './Components/OrderStatus';
-import OrderDetails from './Components/OrderDetails';
-import OrderCustomerDetails from './Components/OrderCustomerDetails';
+import OrderStatus from './components/OrderStatus';
+import OrderDetails from './components/OrderDetails';
+import OrderCustomerDetails from './components/OrderCustomerDetails';
 
-import OrdersData from '../../Data/ordersData.json';
-import CustomerData from '../../Data/customersData.json';
+import OrdersData from '../../data/ordersData.json';
+import CustomerData from '../../data/customersData.json';
 
 
 const order = OrdersData[99];

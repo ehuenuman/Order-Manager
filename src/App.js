@@ -6,10 +6,10 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-import NavDrawer from './Components/NavDrawer';
-import WorkOrder from './Components/WorkOrder';
-import WorkOrderForm from './Components/WorkOrderForm';
-import WorkOrderDashboard from './Components/WorkOrderDashboard';
+import NavDrawer from './components/NavDrawer';
+import WorkOrder from './components/WorkOrder';
+import WorkOrderForm from './components/WorkOrderForm';
+import WorkOrderDashboard from './components/WorkOrderDashboard';
 
 function App() {
   return (
