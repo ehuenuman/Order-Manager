@@ -16,7 +16,7 @@ const columns = [
   {
     field: 'number',
     headerName: '#',
-    width: 50
+    width: 70
   },
   {
     field: 'customer',
