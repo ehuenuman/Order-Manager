@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { format } from 'date-fns';
 
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -9,7 +10,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import StatusCell from './components/StatusCell';
 import DashboardCard from '../DashboardCard';
 
-import OrdersData from '../../data/ordersData.json';
+import { fillOrdersCollection, getOrders } from '../../api/services/WorkOrder';
 
 const columns = [
   {
@@ -19,7 +20,7 @@ const columns = [
   },
   {
     field: 'customer',
-    headName: 'Customer',
+    headerName: 'Customer',
     flex: 1
   },
   {
@@ -56,16 +57,16 @@ const columns = [
   }
 ];
 
-const ParseData = () => {
+const parseData = (OrdersData) => {
   var rows = [];
   var row = {};
 
   OrdersData.map(order => {
-    row.id = order._id;
+    row.id = order.id;
     row.number = order.number;
-    row.customer = order.customer.id;
-    row.creationDate = order.creationDate;
-    row.deadline = order.deadline;
+    row.customer = order.customer.name;
+    row.creationDate = format(order.creationDate.toDate(), "do MMM, yyyy");
+    row.deadline = format(order.deadline.toDate(), "do MMM, yyyy");
     row.status = {
       status: order.status,
       areas: order.areas
@@ -80,8 +81,15 @@ const ParseData = () => {
 }
 
 function WorkOrderDashboard() {
+  const [orders, setOrders] = useState([]);
 
-  const rows = ParseData();
+  useEffect(() => {
+
+    getOrders().then((data) => {
+      setOrders(parseData(data));
+    });
+
+  }, []);
 
   return (
     <Container>
@@ -93,7 +101,7 @@ function WorkOrderDashboard() {
           <DashboardCard title="Recent orders">
             <DataGrid
               columns={columns}
-              rows={rows}
+              rows={orders}
               pageSize={10}
               disableColumnMenu
               autoHeight
