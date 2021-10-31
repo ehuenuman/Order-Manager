@@ -30,7 +30,6 @@ const StatusCell = ({
         color: color
       }
     }
-    console.log(iconsProps);
   });
 
   return (
