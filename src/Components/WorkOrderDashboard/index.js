@@ -10,7 +10,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import StatusCell from './components/StatusCell';
 import DashboardCard from '../DashboardCard';
 
-import { fillOrdersCollection, getOrders } from '../../api/services/WorkOrder';
+import { getOrders } from '../../api/services/WorkOrder'; 
 
 const columns = [
   {
@@ -85,9 +85,9 @@ function WorkOrderDashboard() {
 
   useEffect(() => {
 
-    getOrders().then((data) => {
-      setOrders(parseData(data));
-    });
+    getOrders().then((data) => 
+      setOrders(parseData(data))
+    );
 
   }, []);
 
