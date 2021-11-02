@@ -167,7 +167,7 @@ const OrderStatus = ({
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" component="div">
-              {format(new Date(status.lastUpdate), formatDate)}
+              {format(status.lastUpdate.toDate(), formatDate)}
             </Typography>
           </Grid>
         </Grid>

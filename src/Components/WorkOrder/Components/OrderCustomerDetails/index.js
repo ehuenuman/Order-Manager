@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import List from '@mui/material/List';
@@ -11,10 +11,22 @@ import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 
+import { getCustomerById } from '../../../../api/services/Customer';
+
 const OrderCustomerDetails = ({
-  businessName,
-  contact
+  custmr,
 }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [customer, setCustomer] = useState({});
+  useEffect(() => {
+    getCustomerById(custmr.id).then((data) => {
+      setCustomer(data);
+      setIsLoading(false);
+    }
+    );
+  }, [])
+
   return (
     <List>
       <ListItem>
@@ -22,7 +34,7 @@ const OrderCustomerDetails = ({
           <BusinessOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary={businessName}
+          primary={!isLoading && customer.name}
         />
       </ListItem>
       <ListItem>
@@ -30,7 +42,7 @@ const OrderCustomerDetails = ({
           <PersonOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary={contact.name +" "+ contact.surname}
+          primary={!isLoading && (customer.contact.name + " " + customer.contact.surname)}
         />
       </ListItem>
       <ListItem>
@@ -38,7 +50,7 @@ const OrderCustomerDetails = ({
           <LocalPhoneOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary={contact.phone}
+          primary={!isLoading && customer.contact.phone}
         />
       </ListItem>
       <ListItem>
@@ -46,7 +58,7 @@ const OrderCustomerDetails = ({
           <AlternateEmailOutlinedIcon />
         </ListItemIcon>
         <ListItemText
-          primary={contact.email}
+          primary={!isLoading && customer.contact.email}
         />
       </ListItem>
     </List>
@@ -54,8 +66,7 @@ const OrderCustomerDetails = ({
 }
 
 OrderCustomerDetails.propTypes = {
-  businessName: PropTypes.string.isRequired,
-  contact: PropTypes.object.isRequired
+  custmr: PropTypes.object.isRequired,
 }
 
 export default OrderCustomerDetails

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { format } from 'date-fns';
 
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
@@ -12,17 +13,24 @@ import DashboardCard from '../DashboardCard';
 import OrderStatus from './components/OrderStatus';
 import OrderDetails from './components/OrderDetails';
 import OrderCustomerDetails from './components/OrderCustomerDetails';
-
-import OrdersData from '../../data/ordersData.json';
-import CustomerData from '../../data/customersData.json';
-
-
-const order = OrdersData[99];
-const customer = CustomerData[0];
+import { getOrderById } from '../../api/services/WorkOrder';
 
 function WorkOrder() {
   let { orderNumber } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [order, setOrder] = useState({});
+
+  useEffect(() => {
+    getOrderById(orderNumber).then((data) => {
+      setOrder(data);
+      setIsLoading(false);
+    }
+    );
+  }, []);
+
+  if (isLoading) return "Loading...."
+  
   return (
     <Container>
       <Grid
@@ -36,13 +44,13 @@ function WorkOrder() {
           alignItems="center"
         >
           <Typography variant="h5" component="div">
-            Order #{orderNumber}
+            Order #{order.number}
           </Typography>
-          <Chip 
-            variant="outlined" 
-            color={(order.status.onTime) ? "success" : "error"}
-            icon={<TimerOutlinedIcon />} 
-            label={(order.status.onTime) ? "On time" : "Late"}
+          <Chip
+            variant="outlined"
+            color={(order.success) ? "success" : "error"}
+            icon={<TimerOutlinedIcon />}
+            label={(order.success) ? "On time" : "Late"}
           />
         </Grid>
         <Grid item xs={12} md={8}>
@@ -58,8 +66,7 @@ function WorkOrder() {
         <Grid item xs={12} md={4}>
           <DashboardCard title="Customer details">
             <OrderCustomerDetails
-              businessName={customer.name}
-              contact={customer.contact}
+              custmr={order.customer}
             />
           </DashboardCard>
         </Grid>
@@ -72,7 +79,7 @@ function WorkOrder() {
             />
           </DashboardCard>
         </Grid>
-      </Grid>
+        </Grid>
     </Container >
   )
 }
