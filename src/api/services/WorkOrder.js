@@ -5,6 +5,7 @@ import {
   getDocs,
   query,
   orderBy,
+  updateDoc
 } from 'firebase/firestore';
 import { firestoreInstance } from '../firebase';
 
@@ -27,12 +28,31 @@ export async function getOrders() {
  * 
  * @param orderID string
  */
-export const getOrderById = async (id) => {
+export async function getOrderById(id) {
   const orderRef = doc(firestoreInstance, 'orders', id.toString());
   const querySnapshot = await getDoc(orderRef);
   if (querySnapshot.exists()) {
-    return querySnapshot.data();
+    return { id: querySnapshot.id, ...querySnapshot.data() };
   } else {
     console.log('No order with number: ', id);
   }
+}
+
+/**
+ * Update order state from waiting to on going.
+ * 
+ * @param {number} orderId Order ID
+ * @param {object} stages 
+ * @param {object} status 
+ */
+export async function startStage(orderId, stages, status) {
+  const orderRef = doc(firestoreInstance, 'orders', orderId);
+  const querySnapshot = await updateDoc(
+    orderRef,
+    {
+      'stages': stages,
+      'status.lastUpdate': status.lastUpdate,
+      'status.stage': status.stage
+    }
+  );
 }
