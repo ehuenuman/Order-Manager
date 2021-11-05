@@ -18,7 +18,7 @@ import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import { ColorlibConnector, ColorlibStepIcon } from './Components/StepperUI';
 import { useParams } from 'react-router';
 import { Timestamp } from '@firebase/firestore';
-import { startStage } from '../../../../api/services/WorkOrder';
+import { finishStage, startStage } from '../../../../api/services/WorkOrder';
 
 const formatDate = "dd MMM, yyyy";
 
@@ -116,6 +116,32 @@ const OrderStatus = ({
   };
 
   const handleCompleteStage = () => {
+    const newStatus = JSON.parse(JSON.stringify(status));
+    const newStages = JSON.parse(JSON.stringify(stages));
+    const dateUpdate = Timestamp.fromDate(new Date());
+    newStages[steps[activeStep]].isFinish = dateUpdate;
+    if (steps[activeStep + 1] === 'delivery') {
+      newStages[steps[activeStep + 1]] = {
+        isReady: dateUpdate,
+        isDelivered: false
+      }
+      newStatus.stage = 'isReady';
+    } else {
+      newStages[steps[activeStep + 1]] = {
+        isWaiting: dateUpdate,
+        isOnGoing: false,
+        isFinish: false
+      }
+      newStatus.stage = 'isWaiting';
+    }
+    newStatus.lastUpdate = dateUpdate;
+    newStatus.area = steps[activeStep + 1];
+
+    finishStage(order.id, newStages, newStatus);
+
+    setStages(newStages);
+    setStatus(newStatus);
+
     const newCompleted = completed;
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);

@@ -56,3 +56,16 @@ export async function startStage(orderId, stages, status) {
     }
   );
 }
+
+export async function finishStage(orderId, stages, status) {
+  const orderRef = doc(firestoreInstance, 'orders', orderId);
+  const querySnapshot = await updateDoc(
+    orderRef,
+    {
+      'stages': stages,
+      'status.area': status.area,
+      'status.lastUpdate': status.lastUpdate,
+      'status.stage': status.stage
+    }
+  );
+}
