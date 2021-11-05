@@ -7,6 +7,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import DeliveryDiningOutlinedIcon from '@mui/icons-material/DeliveryDiningOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 
 import DashboardCard from '../DashboardCard';
@@ -30,57 +31,67 @@ function WorkOrder() {
   }, []);
 
   if (isLoading) return "Loading...."
-  
+
   return (
-    <Container>
-      <Grid
-        container
-        spacing={4}
-      >
+      <Container>
         <Grid
           container
-          item
-          justifyContent="space-between"
-          alignItems="center"
+          spacing={4}
         >
-          <Typography variant="h5" component="div">
-            Order #{order.number}
-          </Typography>
-          <Chip
-            variant="outlined"
-            color={(order.success) ? "success" : "error"}
-            icon={<TimerOutlinedIcon />}
-            label={(order.success) ? "On time" : "Late"}
-          />
+          <Grid
+            container
+            item
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h5" component="div">
+              Order #{order.number}
+            </Typography>
+            <div>
+              {(order.status.stage === 'isDelivered') &&
+                <Chip
+                  variant="outlined"
+                  color={(order.status.onTime) ? "success" : "error"}
+                  icon={<DeliveryDiningOutlinedIcon />}
+                  label="Delivered"
+                  sx={{ mr: 2 }}
+                />
+              }
+              <Chip
+                variant="outlined"
+                color={(order.status.onTime) ? "success" : "error"}
+                icon={<TimerOutlinedIcon />}
+                label={(order.status.onTime) ? "On time" : "Late"}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <DashboardCard title="Order details">
+              <OrderDetails
+                creationDate={order.creationDate}
+                deadline={order.deadline}
+                description={order.description}
+                fee={order.fee}
+              />
+            </DashboardCard>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <DashboardCard title="Customer details">
+              <OrderCustomerDetails
+                custmr={order.customer}
+              />
+            </DashboardCard>
+          </Grid>
+          <Grid item xs>
+            <DashboardCard title="Order status">
+              <OrderStatus
+                updateOrder={setOrder}
+                order={order}
+              />
+            </DashboardCard>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <DashboardCard title="Order details">
-            <OrderDetails
-              creationDate={order.creationDate}
-              deadline={order.deadline}
-              description={order.description}
-              fee={order.fee}
-            />
-          </DashboardCard>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <DashboardCard title="Customer details">
-            <OrderCustomerDetails
-              custmr={order.customer}
-            />
-          </DashboardCard>
-        </Grid>
-        <Grid item xs>
-          <DashboardCard title="Order status">
-            <OrderStatus
-              areas={order.areas}
-              stages={order.stages}
-              status={order.status}
-            />
-          </DashboardCard>
-        </Grid>
-        </Grid>
-    </Container >
+      </Container >
   )
 }
 
