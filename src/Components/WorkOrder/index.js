@@ -21,10 +21,12 @@ function WorkOrder() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [order, setOrder] = useState({});
+  const [status, setStatus] = useState({});
 
   useEffect(() => {
     getOrderById(orderNumber).then((data) => {
-      setOrder(data);
+      setOrder(data); //JSON.parse(JSON.stringify(data))
+      setStatus(JSON.parse(JSON.stringify(data.status)));
       setIsLoading(false);
     }
     );
@@ -48,10 +50,10 @@ function WorkOrder() {
               Order #{order.number}
             </Typography>
             <div>
-              {(order.status.stage === 'isDelivered') &&
+              {(status.stage === 'isDelivered') &&
                 <Chip
                   variant="outlined"
-                  color={(order.status.onTime) ? "success" : "error"}
+                  color={(status.onTime) ? "success" : "error"}
                   icon={<DeliveryDiningOutlinedIcon />}
                   label="Delivered"
                   sx={{ mr: 2 }}
@@ -59,9 +61,9 @@ function WorkOrder() {
               }
               <Chip
                 variant="outlined"
-                color={(order.status.onTime) ? "success" : "error"}
+                color={(status.onTime) ? "success" : "error"}
                 icon={<TimerOutlinedIcon />}
-                label={(order.status.onTime) ? "On time" : "Late"}
+                label={(status.onTime) ? "On time" : "Late"}
               />
             </div>
           </Grid>
@@ -85,7 +87,7 @@ function WorkOrder() {
           <Grid item xs>
             <DashboardCard title="Order status">
               <OrderStatus
-                updateOrder={setOrder}
+                updateStatus={setStatus}
                 order={order}
               />
             </DashboardCard>
