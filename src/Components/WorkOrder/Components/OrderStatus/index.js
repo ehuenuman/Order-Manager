@@ -58,7 +58,7 @@ const parseDate = (date) => {
 }
 
 const OrderStatus = ({
-  updateOrder,
+  updateStatus,
   order
 }) => {
   const tempSteps = [
@@ -179,6 +179,7 @@ const OrderStatus = ({
 
     setStatus(JSON.parse(JSON.stringify(newStatus)));
     setStages(JSON.parse(JSON.stringify(newStages)));
+    updateStatus(JSON.parse(JSON.stringify(newStatus)));
     
     handleComplete();
   };
