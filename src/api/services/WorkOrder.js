@@ -39,7 +39,7 @@ export async function getOrderById(id) {
 }
 
 /**
- * Update order state from waiting to on going.
+ * Update order state from waiting to on going
  * 
  * @param {number} orderId Order ID
  * @param {object} stages 
@@ -57,6 +57,13 @@ export async function startStage(orderId, stages, status) {
   );
 }
 
+/**
+ * Finish a order stage
+ * 
+ * @param {*} orderId Order ID
+ * @param {*} stages Stages object
+ * @param {*} status Status object
+ */
 export async function finishStage(orderId, stages, status) {
   const orderRef = doc(firestoreInstance, 'orders', orderId);
   const querySnapshot = await updateDoc(
@@ -64,6 +71,25 @@ export async function finishStage(orderId, stages, status) {
     {
       'stages': stages,
       'status.area': status.area,
+      'status.lastUpdate': status.lastUpdate,
+      'status.stage': status.stage
+    }
+  );
+}
+
+/**
+ * Finish a order marking status as delivered
+ * 
+ * @param {*} orderId Order ID
+ * @param {*} stages Stages object
+ * @param {*} status Status object
+ */
+export async function finishOrder(orderId, stages, status) {
+  const orderRef = doc(firestoreInstance, 'orders', orderId);
+  const querySnapshot = await updateDoc(
+    orderRef,
+    {
+      'stages': stages,
       'status.lastUpdate': status.lastUpdate,
       'status.stage': status.stage
     }
