@@ -51,9 +51,7 @@ const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
   }),
   ...(ownerState.inProgress && {
     backgroundColor: theme.palette.secondary.main,
-    boxShadow: '0 4px 10px 0 rgba(0,0,0,.35)',
-    width: 60,
-    height: 60,
+    boxShadow: '0 4px 10px 0 rgba(0,0,0,.35)'
   }),
 }));
 

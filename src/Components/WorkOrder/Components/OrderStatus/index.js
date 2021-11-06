@@ -1,11 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
@@ -18,10 +15,10 @@ import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 
 import { ColorlibConnector, ColorlibStepIcon } from './Components/StepperUI';
+import { Timestamp } from '@firebase/firestore';
+import { finishOrder, finishStage, startStage } from '../../../../api/services/WorkOrder';
 
 const formatDate = "dd MMM, yyyy";
-
-//var steps = ["Design", "Print", "Workshop", "Installation", "Delivery"];
 
 const parsePhrase = (word1, word2) => {
   var phrase;
@@ -48,7 +45,7 @@ const parsePhrase = (word1, word2) => {
       'design': 'Design',
       'print': 'Print',
       'workshop': 'Workshop',
-      'installion': 'Installation',
+      'installation': 'Installation',
       'delivery': 'Delivery'
     }
     phrase = withCap[word1]
@@ -56,16 +53,25 @@ const parsePhrase = (word1, word2) => {
   return phrase;
 }
 
+const parseDate = (date) => {
+  return format((new Timestamp(date.seconds, date.nanoseconds)).toDate(), formatDate);
+}
+
 const OrderStatus = ({
-  areas,
-  stages,
-  status
+  updateStatus,
+  order
 }) => {
-  const steps = [];
-  Object.entries(areas).map(area => {
-    if (area[1]) steps.push(area[0]);
-  });
-  steps.push("delivery");
+  const tempSteps = [
+    order.areas.design && 'design',
+    order.areas.print && 'print',
+    order.areas.workshop && 'workshop',
+    order.areas.installation && 'installation',
+  ];
+  tempSteps.push("delivery");
+  const steps = tempSteps.filter(word => word !== false);
+
+  const [status, setStatus] = React.useState(JSON.parse(JSON.stringify(order.status)));
+  const [stages, setStages] = React.useState(JSON.parse(JSON.stringify(order.stages)));
 
   const [activeStep, setActiveStep] = React.useState(
     steps.findIndex((element) => element === status.area)
@@ -97,9 +103,7 @@ const OrderStatus = ({
 
   const handleNext = () => {
     const newActiveStep =
-      isLastStep() ?
-        activeStep
-        : activeStep + 1;
+      isLastStep() ? activeStep : activeStep + 1;
     setActiveStep(newActiveStep);
   };
 
@@ -117,6 +121,67 @@ const OrderStatus = ({
     setCompleted(newCompleted);
     setInProgress(activeStep + 1);
     handleNext();
+  };
+
+  const handleStartStage = () => {
+    const newStatus = order.status;
+    const newStages = order.stages;
+    const timestamp = Timestamp.now();
+    newStages[steps[activeStep]].isOnGoing = timestamp;
+    newStatus.lastUpdate = timestamp;
+    newStatus.stage = 'isOnGoing';
+
+    startStage(order.id, newStages, newStatus);
+
+    setStatus(JSON.parse(JSON.stringify(newStatus)));
+    setStages(JSON.parse(JSON.stringify(newStages)));
+  };
+
+  const handleCompleteStage = () => {
+    const newStatus = order.status;
+    const newStages = order.stages;
+    const timestamp = Timestamp.now();
+    newStages[steps[activeStep]].isFinish = timestamp;
+    if (steps[activeStep + 1] === 'delivery') {
+      newStages[steps[activeStep + 1]] = {
+        isReady: timestamp,
+        isDelivered: false
+      }
+      newStatus.stage = 'isReady';
+    } else {
+      newStages[steps[activeStep + 1]] = {
+        isWaiting: timestamp,
+        isOnGoing: false,
+        isFinish: false
+      }
+      newStatus.stage = 'isWaiting';
+    }
+    newStatus.lastUpdate = timestamp;
+    newStatus.area = steps[activeStep + 1];
+
+    finishStage(order.id, newStages, newStatus);
+
+    setStatus(JSON.parse(JSON.stringify(newStatus)));
+    setStages(JSON.parse(JSON.stringify(newStages)));
+
+    handleComplete();
+  };
+
+  const handleCompleteOrder = () => {
+    const newStatus = order.status;
+    const newStages = order.stages;
+    const dateUpdate = Timestamp.now();
+    newStages[steps[activeStep]].isDelivered = dateUpdate;
+    newStatus.lastUpdate = dateUpdate;
+    newStatus.stage = 'isDelivered';
+    
+    finishOrder(order.id, newStages, newStatus);
+
+    setStatus(JSON.parse(JSON.stringify(newStatus)));
+    setStages(JSON.parse(JSON.stringify(newStages)));
+    updateStatus(JSON.parse(JSON.stringify(newStatus)));
+    
+    handleComplete();
   };
 
   return (
@@ -169,7 +234,7 @@ const OrderStatus = ({
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" component="div">
-              {format(new Date(status.lastUpdate), formatDate)}
+              {parseDate(status.lastUpdate)}
             </Typography>
           </Grid>
         </Grid>
@@ -213,7 +278,6 @@ const OrderStatus = ({
                 StepIconProps={{ 'icon': label, 'inProgress': index === inProgress }}
               >
                 {parsePhrase(label)}
-                {parsePhrase()}
               </StepLabel>
             </StepButton>
           </Step>
@@ -230,20 +294,29 @@ const OrderStatus = ({
         >
           Back
         </Button>
-        {activeStep !== steps.length &&
+        {
+          activeStep !== steps.length &&
           (completed[activeStep] ? (
             <Typography variant="caption" sx={{ display: 'inline-block' }}>
               {
-                parsePhrase(steps[activeStep]) + " completed on " + format(new Date(stages[steps[activeStep]].isFinish), formatDate)
+                parsePhrase(steps[activeStep]) + " completed on " + parseDate(stages[steps[activeStep]][(activeStep < totalSteps() - 1 ? 'isFinish' : 'isDelivered')])
               }
             </Typography>
-          ) : (
-            <Button onClick={handleComplete}>
-              {completedSteps() === totalSteps() - 1
-                ? 'Finish Order'
-                : 'Complete Step'}
+          ) : (completedSteps() === totalSteps() - 1) ? (
+            <Button onClick={handleCompleteOrder}>
+              Finish Order
             </Button>
-          ))}
+          ) : (status.stage === 'isWaiting') ? (
+            <Button onClick={handleStartStage}>
+              Start Job
+            </Button>
+          ) : (
+            <Button onClick={handleCompleteStage}>
+              Complete {parsePhrase(steps[activeStep])}
+            </Button>
+          )
+          )
+        }
         <Button
           disabled={
             activeStep === totalSteps() - 1
@@ -258,12 +331,6 @@ const OrderStatus = ({
       </Grid>
     </Stack>
   )
-}
-
-OrderStatus.propTypes = {
-  areas: PropTypes.object.isRequired,
-  stages: PropTypes.object.isRequired,
-  status: PropTypes.object.isRequired
 }
 
 export default OrderStatus

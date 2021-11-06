@@ -65,8 +65,8 @@ const OrderDetails = ({
                 <TodayOutlinedIcon aria-label="created date" />
               </ListItemIcon>
               <ListItemText
-                primary={format(new Date(creationDate), formatDate)}
-                secondary={formatDistance(new Date(creationDate), new Date(), { addSuffix: true })}
+                primary={format(creationDate.toDate(), formatDate)}
+                secondary={formatDistance(creationDate.toDate(), new Date(), { addSuffix: true })}
               />
             </ListItem>
             <ListItem>
@@ -74,8 +74,8 @@ const OrderDetails = ({
                 <EventOutlinedIcon aria-label="deadline" />
               </ListItemIcon>
               <ListItemText
-                primary={format(new Date(deadline), formatDate)}
-                secondary={formatDistance(new Date(deadline), new Date(), { addSuffix: true })}
+                primary={format(deadline.toDate(), formatDate)}
+                secondary={formatDistance(deadline.toDate(), new Date(), { addSuffix: true })}
               />
             </ListItem>
           </List>
@@ -125,8 +125,8 @@ const OrderDetails = ({
 }
 
 OrderDetails.propTypes = {
-  creationDate: PropTypes.string.isRequired,
-  deadline: PropTypes.string.isRequired,
+  creationDate: PropTypes.object.isRequired,
+  deadline: PropTypes.object.isRequired,
   description: PropTypes.string.isRequired,
   fee: PropTypes.object.isRequired
 }

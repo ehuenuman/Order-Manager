@@ -14,71 +14,57 @@ const StatusCell = ({
   areas,
   ...otherProps
 }) => {
-
-  var doneFlag = true;
-  var color = 'primary';
+  var iconsProps = {};
+  var color;
+  var isStageNoTouched = false;
+  const stages = ['design', 'print', 'workshop', 'installation'];
+  stages.map(stage => {
+    color = isStageNoTouched ? 'disabled' : 'primary';
+    if (areas[stage]) {
+      if (status.area === stage) {
+        color = 'secondary';
+        isStageNoTouched = true;
+      }
+      iconsProps[stage] = {
+        key: stage,
+        color: color
+      }
+    }
+  });
 
   return (
     <Grid
       container
       justifyContent="space-between"
       alignItems="center"
-      {...otherProps}
     >
       <div>
-        {
-          Object.entries(areas).map(([key, value]) => {
-            color = !doneFlag ? 'disabled' : 'primary';
-            switch (key) {
-              case 'design':
-                if (value) {
-                  if (status.area === key) {
-                    color = 'secondary';
-                    doneFlag = !doneFlag;
-                  }
-                  return <DesignServicesOutlinedIcon key={key} color={color} />
-                }
-                break;
-              case 'print':
-                if (value) {
-                  if (status.area === key) {
-                    color = 'secondary';
-                    doneFlag = !doneFlag;
-                  }
-                  return <LocalPrintshopOutlinedIcon key={key} color={color} />
-                }
-                break;
-              case 'workshop':
-                if (value) {
-                  if (status.area === key) {
-                    color = 'secondary';
-                    doneFlag = !doneFlag;
-                  }
-                  return <HandymanOutlinedIcon key={key} color={color} />
-                }
-                break
-              case 'installation':
-                if (value) {
-                  if (status.area === key) {
-                    color = 'secondary';
-                    doneFlag = !doneFlag;
-                  }
-                  return <PanToolOutlinedIcon key={key} color={color} />
-                }
-                break;
-              default:
-                break;
-            }
-          })
-        }
-        <DeliveryDiningOutlinedIcon
-          key="delivery"
-          color={
-            status.stage === 'isDelivered' ? 'primary'
-              : status.area === 'delivery' ? 'secondary'
-                : 'disabled'
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          {
+            areas.design && <DesignServicesOutlinedIcon {...iconsProps.design} />
           }
-        />
+          {
+            areas.print && <LocalPrintshopOutlinedIcon {...iconsProps.print} />
+          }
+          {
+            areas.workshop && <HandymanOutlinedIcon {...iconsProps.workshop} />
+          }
+          {
+            areas.installation && <PanToolOutlinedIcon {...iconsProps.installation} />
+          }
+          <DeliveryDiningOutlinedIcon
+            key="delivery"
+            color={
+              status.stage === 'isDelivered' ? 'primary'
+                : status.area === 'delivery' ? 'secondary'
+                  : 'disabled'
+            }
+          />
+        </Grid>
       </div>
       <div>
         <Typography
