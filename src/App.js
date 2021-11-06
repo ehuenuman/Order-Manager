@@ -19,7 +19,7 @@ function App() {
         <NavDrawer />
         <Box component="main" sx={{ flexGrow: 1, p: 3, pt: 12 }}>
           <Switch>
-            <Route exact path="/order">
+            <Route exact path="/">
               <WorkOrderDashboard />
             </Route>
             <Route exact path={'/order/:orderNumber'}>
