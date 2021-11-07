@@ -4,14 +4,18 @@ import {
   getDoc,
   getDocs,
   query,
+  limit,
   orderBy,
+  setDoc,
   updateDoc
 } from 'firebase/firestore';
 import { firestoreInstance } from '../firebase';
+import { createCustomer } from './Customer';
 
 /**
- * Fetch all the orders from Firestore ordered by creation date descent.
+ * Fetch all the orders ordered descent by their creation date
  * 
+ * @returns Object of orders
  */
 export async function getOrders() {
   const ordersRef = collection(firestoreInstance, 'orders');
@@ -26,7 +30,7 @@ export async function getOrders() {
 /**
  * Fetch one order by its ID
  * 
- * @param orderID string
+ * @param {number} id ID of the order to look
  */
 export async function getOrderById(id) {
   const orderRef = doc(firestoreInstance, 'orders', id.toString());
@@ -47,7 +51,7 @@ export async function getOrderById(id) {
  */
 export async function startStage(orderId, stages, status) {
   const orderRef = doc(firestoreInstance, 'orders', orderId);
-  const querySnapshot = await updateDoc(
+  await updateDoc(
     orderRef,
     {
       'stages': stages,
@@ -60,13 +64,13 @@ export async function startStage(orderId, stages, status) {
 /**
  * Finish a order stage
  * 
- * @param {*} orderId Order ID
- * @param {*} stages Stages object
- * @param {*} status Status object
+ * @param {number} orderId Order ID
+ * @param {object} stages Stages
+ * @param {object} status Status
  */
 export async function finishStage(orderId, stages, status) {
   const orderRef = doc(firestoreInstance, 'orders', orderId);
-  const querySnapshot = await updateDoc(
+  await updateDoc(
     orderRef,
     {
       'stages': stages,
@@ -78,15 +82,15 @@ export async function finishStage(orderId, stages, status) {
 }
 
 /**
- * Finish a order marking status as delivered
+ * Finish a order marking its status as delivered
  * 
- * @param {*} orderId Order ID
- * @param {*} stages Stages object
- * @param {*} status Status object
+ * @param {string} id Order ID
+ * @param {object} stages Stages
+ * @param {object} status Status
  */
-export async function finishOrder(orderId, stages, status) {
-  const orderRef = doc(firestoreInstance, 'orders', orderId);
-  const querySnapshot = await updateDoc(
+export async function finishOrder(id, stages, status) {
+  const orderRef = doc(firestoreInstance, 'orders', id);
+  await updateDoc(
     orderRef,
     {
       'stages': stages,
@@ -94,4 +98,80 @@ export async function finishOrder(orderId, stages, status) {
       'status.stage': status.stage
     }
   );
+}
+
+/**
+ * Create new order from data
+ * 
+ * @param {object} data 
+ * @returns Status query
+ */
+export async function createOrder(data) {
+  var firstStage = data.orderArea[0].substring(9).toLowerCase();
+  var newOrder = {
+    number: 0,
+    creationDate: new Date(),
+    deadline: data.orderDeadline,
+    description: data.orderDetails,
+    areas: {
+      design: (data.orderArea.indexOf("orderAreaDesign") !== -1),
+      print: (data.orderArea.indexOf("orderAreaPrint") !== -1),
+      workshop: (data.orderArea.indexOf("orderAreaWorkshop") !== -1),
+      installation: (data.orderArea.indexOf("orderAreaInstallation") !== -1)
+    },
+    fee: {
+      paid: (isNaN(parseInt(data.orderPaidFee))) ? 0 : parseInt(data.orderPaidFee),
+      toPaid: parseInt(data.orderToPaidFee),
+      total: parseInt(data.orderTotalFee)
+    },
+    status: {
+      area: firstStage,
+      lastUpdate: new Date(),
+      onTime: true,
+      stage: 'isWaiting'
+    },
+    customer: {
+      id: data.customerId,
+      name: data.customerName
+    }
+  };
+  var stages = {};
+  stages[firstStage] = {
+    isWaiting: new Date(),
+    isOnGoing: false,
+    isFinish: false
+  };
+  newOrder['stages'] = stages;
+
+  await getLastOrderId()
+    .then(number => (newOrder.number = number + 1))
+    .then(() => {
+      if (data.customerId.length === 0) {
+        createCustomer(data).then(customerId => {
+          console.log('Cliente nuevo');
+          newOrder.customer.id = customerId
+        });
+      } else {
+        console.log('Cliente existe');
+      }
+    })
+    .then(async () => {
+      const orderRef = doc(firestoreInstance, 'orders', (newOrder.number).toString());
+      const querySnapshot = await setDoc(orderRef, newOrder);
+      console.log(querySnapshot);
+    });
+  return 'success';
+}
+
+/**
+ * Fetch the last customer ID created
+ * 
+ * @returns Order ID
+ */
+export async function getLastOrderId() {
+  const ordersRef = collection(firestoreInstance, 'orders');
+  const q = query(ordersRef, orderBy('number', 'desc'), limit(1));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs[0].data().number
 }
