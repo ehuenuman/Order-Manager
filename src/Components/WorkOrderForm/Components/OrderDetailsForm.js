@@ -4,8 +4,7 @@ import {
   FormLabel,
   Grid,
   InputAdornment,
-  Stack,
-  Typography
+  Stack
 } from '@mui/material';
 import NumberFormat from "react-number-format";
 import PropTypes from 'prop-types';
@@ -62,9 +61,6 @@ function OrderDetailsForm() {
 
   return (
     <CardContent>
-      <Typography variant="h4" gutterBottom>
-        Order Details
-      </Typography>
       <Grid container spacing={2} justifyContent="space-around">
         <Grid item xs={12}>
           <TextField
