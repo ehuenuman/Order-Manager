@@ -45,7 +45,7 @@ function OrderDetailsForm() {
     { name: 'orderAreaDesign', label: 'Design' },
     { name: 'orderAreaPrint', label: 'Print' },
     { name: 'orderAreaWorkshop', label: 'Workshop' },
-    { name: 'orderAraInstallation', label: 'Installation' }
+    { name: 'orderAreaInstallation', label: 'Installation' }
   ];
 
   const {
