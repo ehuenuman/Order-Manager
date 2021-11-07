@@ -157,8 +157,7 @@ export async function createOrder(data) {
     })
     .then(async () => {
       const orderRef = doc(firestoreInstance, 'orders', (newOrder.number).toString());
-      const querySnapshot = await setDoc(orderRef, newOrder);
-      console.log(querySnapshot);
+      await setDoc(orderRef, newOrder);
     });
   return 'success';
 }
