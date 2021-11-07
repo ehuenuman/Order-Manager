@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { firestoreInstance } from '../firebase';
 
 /**
@@ -28,4 +28,35 @@ import { firestoreInstance } from '../firebase';
   } else {
     console.log('Customer does not exist, ID: ', id);
   }
+}
+
+/**
+ * Create a new customer from given data.
+ * @param data 
+ * @returns new customer ID
+ */
+export async function createCustomer(data) {
+  const customersRef = collection(firestoreInstance, 'customers');
+
+  const newCustomer = {
+    name: data.customerName,
+    bin: data.customerIdDocument,
+    address: {
+      line1: data.customerAddress,
+      line2: '',
+      city: data.customerCity,
+      suburb: data.customerSuburb,
+      postalCode: data.customerPostalCode
+    },
+    contact: {
+      name: data.contactName,
+      surname: data.contactSurname,
+      email: data.contactEmail,
+      phone: data.contactPhone
+    }
+  };
+
+  const customerRef = await addDoc(customersRef, newCustomer);
+  
+  return customerRef.id
 }
