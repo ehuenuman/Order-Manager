@@ -25,7 +25,7 @@ function App() {
             <Route exact path={'/order/:orderNumber'}>
               <WorkOrder />
             </Route>
-            <Route exact path="/new-work">
+            <Route exact path="/order">
               <WorkOrderForm />
             </Route>
           </Switch>
