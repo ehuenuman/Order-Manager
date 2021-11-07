@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useFormikContext } from 'formik';
 
 const SubmitButtonWrapper = ({
@@ -16,12 +16,13 @@ const SubmitButtonWrapper = ({
     ...otherProps,
     variant: 'contained',
     onClick: handleSubmit,
+    loadingIndicator: "Loading..."
   }
 
   return (
-    <Button {...configButton}>
+    <LoadingButton {...configButton}>
       {children}
-    </Button>
+    </LoadingButton>
   )
 }
 
