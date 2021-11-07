@@ -1,20 +1,33 @@
 import React from 'react';
 import { CardContent, Grid, Typography } from '@mui/material';
 import TextField from './FormUI/TextField';
+import Autocomplete from './FormUI/Autocomplete';
+import { getCustomers } from '../../../api/services/Customer';
 
 function CustomerDetailsForm() {
+
+  const [customers, setCustomers] = React.useState([]);
+  React.useEffect(() => {
+    getCustomers().then((data) => {
+      setCustomers(data);
+    });
+  }, []);
+
   return (
     <CardContent>
-      <Typography variant="h4" gutterBottom>
-        Customer Details
-      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Grid container item spacing={2}>
             <Grid item xs={12} md={8}>
-              <TextField
+              <Autocomplete
                 name="customerName"
                 label="Name Business or Person"
+                customers={customers}
+              />
+              <TextField
+                name="customerId"
+                type="hidden"
+                sx={{ display: 'none' }}
               />
             </Grid>
             <Grid item xs={12} md={4}>
