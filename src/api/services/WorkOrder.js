@@ -145,11 +145,11 @@ export async function createOrder(data) {
 
   await getLastOrderId()
     .then(number => (newOrder.number = number + 1))
-    .then(() => {
+    .then(async () => {
       if (data.customerId.length === 0) {
-        createCustomer(data).then(customerId => {
-          console.log('Cliente nuevo');
-          newOrder.customer.id = customerId
+        await createCustomer(data).then(customerId => {
+          console.log('Cliente nuevo', customerId);
+          newOrder.customer.id = customerId;
         });
       } else {
         console.log('Cliente existe');
