@@ -18,7 +18,7 @@ const StatusCell = ({
   var color;
   var isStageNoTouched = false;
   const stages = ['design', 'print', 'workshop', 'installation'];
-  stages.map(stage => {
+  stages.forEach(stage => {
     color = isStageNoTouched ? 'disabled' : 'primary';
     if (areas[stage]) {
       if (status.area === stage) {

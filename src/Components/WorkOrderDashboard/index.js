@@ -10,7 +10,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import StatusCell from './components/StatusCell';
 import DashboardCard from '../DashboardCard';
 
-import { getOrders } from '../../api/services/WorkOrder'; 
+import { getOrders } from '../../api/services/WorkOrder';
 
 const columns = [
   {
@@ -61,7 +61,7 @@ const parseData = (OrdersData) => {
   var rows = [];
   var row = {};
 
-  OrdersData.map(order => {
+  OrdersData.forEach(order => {
     row.id = order.id;
     row.number = order.number;
     row.customer = order.customer.name;
@@ -74,7 +74,6 @@ const parseData = (OrdersData) => {
 
     rows.push(row);
     row = {}
-
   });
 
   return rows
@@ -85,7 +84,7 @@ function WorkOrderDashboard() {
 
   useEffect(() => {
 
-    getOrders().then((data) => 
+    getOrders().then((data) =>
       setOrders(parseData(data))
     );
 

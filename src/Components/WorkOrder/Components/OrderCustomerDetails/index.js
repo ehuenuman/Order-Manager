@@ -14,13 +14,13 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { getCustomerById } from '../../../../api/services/Customer';
 
 const OrderCustomerDetails = ({
-  custmr,
+  customerId,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [customer, setCustomer] = useState({});
   useEffect(() => {
-    getCustomerById(custmr.id).then((data) => {
+    getCustomerById(customerId).then((data) => {
       setCustomer(data);
       setIsLoading(false);
     }
@@ -66,7 +66,7 @@ const OrderCustomerDetails = ({
 }
 
 OrderCustomerDetails.propTypes = {
-  custmr: PropTypes.object.isRequired,
+  customerId: PropTypes.string.isRequired
 }
 
 export default OrderCustomerDetails

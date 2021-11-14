@@ -10,8 +10,16 @@ import NavDrawer from './components/NavDrawer';
 import WorkOrder from './components/WorkOrder';
 import WorkOrderForm from './components/WorkOrderForm';
 import WorkOrderDashboard from './components/WorkOrderDashboard';
+import Login from './components/Login';
 
 function App() {
+
+  const [user, setUser] = React.useState({userName: '', password: ''});
+
+  if (!user.userName) {
+    return <Login user={user} setUser={setUser} />
+  }
+
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>
@@ -25,7 +33,7 @@ function App() {
             <Route exact path={'/order/:orderNumber'}>
               <WorkOrder />
             </Route>
-            <Route exact path="/new-work">
+            <Route exact path="/order">
               <WorkOrderForm />
             </Route>
           </Switch>

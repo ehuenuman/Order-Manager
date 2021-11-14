@@ -149,7 +149,7 @@ function MiniDrawer() {
         <Divider />
         <List>
           <ListItemLink primary="Dashboard" to="/" icon={<InboxIcon />} />
-          <ListItemLink primary="Create work order" to="/new-work" icon={<InboxIcon />} />
+          <ListItemLink primary="Create work order" to="/order" icon={<InboxIcon />} />
         </List>
       </Drawer>
     </React.Fragment >

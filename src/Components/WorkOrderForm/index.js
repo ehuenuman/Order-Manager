@@ -1,22 +1,20 @@
 import React from 'react';
 import {
-  Button,
-  Card,
-  CardActions,
+  Alert,
   Container,
-  Grid,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
+  Grid
 } from '@mui/material';
-import SubmitButton from './components/FormUI/SubmitButton';
-import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
+import DashboardCard from '../DashboardCard';
+import SubmitButton from './components/FormUI/SubmitButton';
 import CustomerDetailsForm from './components/CustomerDetailsForm';
 import OrderDetailsForm from './components/OrderDetailsForm';
+import { createOrder } from '../../api/services/WorkOrder';
+import { useHistory } from 'react-router-dom';
 
 const initialFormState = {
+  customerId: '',
   customerName: '',
   customerIdDocument: '',
   contactName: '',
@@ -36,6 +34,7 @@ const initialFormState = {
 };
 
 const formSchemaValidation = Yup.object().shape({
+  customerId: Yup.string(),
   customerName: Yup.string()
     .required('Required'),
   customerIdDocument: Yup.string()
@@ -75,26 +74,13 @@ const formSchemaValidation = Yup.object().shape({
   orderToPaidFee: Yup.string(),
 });
 
-const steps = [
-  {
-    label: 'Customer details',
-    content: <CustomerDetailsForm />,
-  },
-  {
-    label: 'Order details',
-    content: <OrderDetailsForm />
-  }
-];
-
 function WorkOrderForm() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  const [loading, setLoading] = React.useState(false);
+  const [successSubmit, setSuccessSubmit] = React.useState(false);
+  const [errorSubmit, setErrorSubmit] = React.useState(false);
+  let history = useHistory();
+  const goHome = () => {
+    history.push('/');
   };
 
   return (
@@ -102,55 +88,52 @@ function WorkOrderForm() {
       <Formik
         initialValues={{ ...initialFormState }}
         validationSchema={formSchemaValidation}
-        onSubmit={values => {
+        onSubmit={(values, actions) => {
           console.log(values);
+          setLoading(true);
+          createOrder(values)
+            .then((response) => {
+              (response === 'success') && setSuccessSubmit(true);
+              (response === 'error') && setErrorSubmit(true);
+              actions.resetForm({
+                values: initialFormState
+              });
+              setLoading(false);
+              goHome();
+            });
         }}
       >
         <Form>
-          <Stepper activeStep={activeStep} orientation="vertical">
-            {steps.map((step, index) => (
-              <Step key={step.label}>
-                <StepLabel>
-                  {step.label}
-                </StepLabel>
-                <StepContent>
-                  <Card>
-                    {step.content}
-                    <CardActions sx={{ mb: 2 }}>
-                      <Grid container spacing={2} justifyContent="flex-end">
-                        <Grid item xs="auto">
-                          <div>
-                            {activeStep === steps.length - 1 ? (
-                              <SubmitButton
-                                sx={{ mt: 1, mr: 1 }}
-                              >
-                                Create Work Order
-                              </SubmitButton>
-                            ) : (
-                              <Button
-                                variant="contained"
-                                onClick={handleNext}
-                                sx={{ mt: 1, mr: 1 }}
-                              >
-                                Continue
-                              </Button>
-                            )}
-                            <Button
-                              disabled={index === 0}
-                              onClick={handleBack}
-                              sx={{ mt: 1, mr: 1 }}
-                            >
-                              Back
-                            </Button>
-                          </div>
-                        </Grid>
-                      </Grid>
-                    </CardActions>
-                  </Card>
-                </StepContent>
-              </Step>
-            ))}
-          </Stepper>
+          <Grid
+            container
+            spacing={4}
+          >
+            <Grid item xs={12} xl={6}>
+              <DashboardCard title="Customer details">
+                <CustomerDetailsForm />
+              </DashboardCard>
+            </Grid>
+            <Grid item xs={12} xl={6}>
+              <DashboardCard title="Order details">
+                <OrderDetailsForm />
+              </DashboardCard>
+            </Grid>
+            <Grid
+              container
+              item
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              {successSubmit && <Alert severity="success">Success! Work Order has been created</Alert>}
+              {errorSubmit && <Alert severity="error">Oops! Couldn't create a new work order. Try it later!</Alert>}
+              <SubmitButton
+                loading={loading}
+                sx={{ margin: 1 }}
+              >
+                Create Work Order
+              </SubmitButton>
+            </Grid>
+          </Grid>
         </Form>
       </Formik>
     </Container>

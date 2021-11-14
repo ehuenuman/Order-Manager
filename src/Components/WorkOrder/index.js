@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { format } from 'date-fns';
 
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
@@ -80,7 +79,7 @@ function WorkOrder() {
           <Grid item xs={12} md={4}>
             <DashboardCard title="Customer details">
               <OrderCustomerDetails
-                custmr={order.customer}
+                customerId={order.customer.id}
               />
             </DashboardCard>
           </Grid>
