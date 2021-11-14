@@ -4,6 +4,10 @@
 /src/api/firebaseConfig.js
 /src/data
 
+# Firebas
+.firebaserc
+firebase.json
+
 # dependencies
 /node_modules
 /.pnp
