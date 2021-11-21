@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, CardActions, CardContent, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import {Card, CardActions, CardContent, Grid, IconButton, InputAdornment, Stack, Typography } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -25,10 +25,6 @@ function Login({
   };
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
-  };
-
-  const handleChange = (prop) => (event) => {
-    setUser({ ...user, [prop]: event.target.value });
   };
 
   return (
