@@ -102,6 +102,7 @@ function WorkOrderDashboard() {
               columns={columns}
               rows={orders}
               pageSize={10}
+              rowsPerPageOptions={[10]}
               disableColumnMenu
               autoHeight
             />
