@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 
 exports.checkOrderDeadline = functions.pubsub.schedule("every day 00:00")
+    .timeZone("Pacific/Auckland")
     .onRun((context) => {
       const today = new Date();
       const ordersRef = admin.firestore().collection("orders");
