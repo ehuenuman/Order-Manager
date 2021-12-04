@@ -25,7 +25,7 @@ const OrderCustomerDetails = ({
       setIsLoading(false);
     }
     );
-  }, [])
+  }, [customerId]);
 
   return (
     <List>

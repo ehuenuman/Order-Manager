@@ -29,7 +29,7 @@ function WorkOrder() {
       setIsLoading(false);
     }
     );
-  }, []);
+  }, [orderNumber]);
 
   if (isLoading) return "Loading...."
 

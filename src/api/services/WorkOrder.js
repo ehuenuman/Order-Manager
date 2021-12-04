@@ -107,7 +107,6 @@ export async function finishOrder(id, stages, status) {
  * @returns Status query
  */
 export async function createOrder(data) {
-  var firstStage = data.orderArea[0].substring(9).toLowerCase();
   var newOrder = {
     number: 0,
     creationDate: new Date(),
@@ -125,7 +124,6 @@ export async function createOrder(data) {
       total: parseInt(data.orderTotalFee)
     },
     status: {
-      area: firstStage,
       lastUpdate: new Date(),
       onTime: true,
       stage: 'isWaiting'
@@ -135,6 +133,12 @@ export async function createOrder(data) {
       name: data.customerName
     }
   };
+  var firstStage = newOrder.areas.design ? 'design'
+    : newOrder.areas.print ? 'print'
+    : newOrder.areas.workshop ? 'workshop'
+    : 'installation';
+
+  newOrder.status['area'] = firstStage;
   var stages = {};
   stages[firstStage] = {
     isWaiting: new Date(),
