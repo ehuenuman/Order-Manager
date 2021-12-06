@@ -1,13 +1,26 @@
 import React from 'react';
-import {Card, CardActions, CardContent, Grid, IconButton, InputAdornment, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Stack,
+  Typography
+} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import TextFieldWrapper from '../WorkOrderForm/components/FormUI/TextField';
 import SubmitButtonWrapper from '../WorkOrderForm/components/FormUI/SubmitButton';
+import { signIn } from '../../api/services/Auth';
 
 const formSchemaValidation = Yup.object().shape({
   userName: Yup.string()
+    .email('Please write a valid email')
     .required('Required'),
   password: Yup.string()
     .required('Required'),
@@ -20,12 +33,27 @@ function Login({
 }) {
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const [signInError, setSignInError] = React.useState(false);
+  const [signInMessage, setSignInMessage] = React.useState({});
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const submitForm = (userName, password) => {
+    setSignInError(false);
+    signIn(userName, password)
+      .then((user) => {
+        if (user.message === 'success') {
+          console.log(user);
+        } else {
+          setSignInError(true);
+          setSignInMessage(user);
+        }
+      });
+  }
 
   return (
     <Grid
@@ -37,14 +65,18 @@ function Login({
       <Formik
         initialValues={{ userName: '', password: '' }}
         validationSchema={formSchemaValidation}
-        onSubmit={(values, actions) => {
-          setUser({
-            userName: values.userName,
-            password: values.password
-          })
-        }}
+        onSubmit={(values, actions) => submitForm(values.userName, values.password)}
       >
         <Form>
+          {
+            signInError &&
+            <Alert
+              severity="error"
+              sx={{ mb: 1 }}
+            >
+              {signInMessage.title}
+            </Alert>
+          }
           <Card>
             <CardContent>
               <Stack>
@@ -53,7 +85,7 @@ function Login({
                 </Typography>
                 <TextFieldWrapper
                   variant="standard"
-                  label="User"
+                  label="Email"
                   name="userName"
                   sx={{ m: 1, width: '25ch' }}
                 />
@@ -82,13 +114,24 @@ function Login({
             <CardActions>
               <Grid
                 container
-                item
+                spacing={2}
+                direction="column"
                 justifyContent="center"
                 alignItems="center"
               >
-                <SubmitButtonWrapper>
-                  Login
-                </SubmitButtonWrapper>
+                <Grid item>
+                  <SubmitButtonWrapper>
+                    Login
+                  </SubmitButtonWrapper>
+                </Grid>
+                <Grid item>
+                  {
+                    signInError &&
+                    <Typography variant="caption" component="div">
+                      {signInMessage.instructions}
+                    </Typography>
+                  }
+                </Grid>
               </Grid>
             </CardActions>
           </Card>
