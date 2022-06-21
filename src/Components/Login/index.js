@@ -46,7 +46,7 @@ function Login({
     signIn(userName, password)
       .then((user) => {
         if (user.message === 'success') {
-          console.log(user);
+          setUser(user)
         } else {
           setSignInError(true);
           setSignInMessage(user);
@@ -126,7 +126,7 @@ function Login({
                 <Grid item>
                   {
                     signInError &&
-                    <Typography variant="caption" component="div">
+                    <Typography variant="caption" component="div" noWrap="true">
                       {signInMessage.instructions}
                     </Typography>
                   }

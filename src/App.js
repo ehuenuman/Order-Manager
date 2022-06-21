@@ -14,9 +14,9 @@ import Login from './components/Login';
 
 function App() {
 
-  const [user, setUser] = React.useState({userName: '', password: ''});
+  const [user, setUser] = React.useState();
 
-  if (!user.userName) {
+  if (!user) {
     return <Login user={user} setUser={setUser} />
   }
 

@@ -1,4 +1,6 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+
+import { auth } from '../firebase';
 
 /**
  * Sign in from email and password given.
@@ -7,9 +9,8 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
  * 
  * @returns User | Error
  */
-export function signIn(email, password) {
-  const auth = getAuth();
-  return signInWithEmailAndPassword(auth, email, password)
+export async function signIn(email, password) {
+  return await signInWithEmailAndPassword(auth, email, password)
     .then((userCredentials) => {
       var user = userCredentials.user;
       user.message = "success";
