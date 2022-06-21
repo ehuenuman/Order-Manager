@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Alert,
   Container,
@@ -82,6 +82,10 @@ function WorkOrderForm() {
   const goHome = () => {
     history.push('/');
   };
+
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
 
   return (
     <Container>
