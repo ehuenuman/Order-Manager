@@ -66,7 +66,7 @@ function Login({
         validationSchema={formSchemaValidation}
         onSubmit={(values, actions) => submitForm(values.userName, values.password)}
       >
-        <Form>
+        <Form style={{ minWidth: '320px', maxWidth: '320px' }}>
           {
             signInError &&
             <Alert
@@ -86,7 +86,7 @@ function Login({
                   variant="standard"
                   label="Email"
                   name="userName"
-                  sx={{ m: 1, width: '25ch' }}
+                  sx={{ m: 1, width: 'auto' }}
                 />
                 <TextFieldWrapper
                   id="standard-adornment-password"
@@ -106,7 +106,7 @@ function Login({
                         </IconButton>
                       </InputAdornment>
                   }}
-                  sx={{ m: 1, width: '25ch' }}
+                  sx={{ m: 1, width: 'auto' }}
                 />
               </Stack>
             </CardContent>
